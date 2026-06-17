@@ -1,0 +1,6 @@
+[build]
+  # The directory containing the static files to deploy
+  publish = "."
+
+  # No build command is needed for this static site
+  command = ""
