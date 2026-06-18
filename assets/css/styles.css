@@ -173,7 +173,7 @@ img {
   left: 0;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  z-index: 9999;
+  z-index: 20000;
   pointer-events: none;
   display: none; /* Hidden by default, shown in JS */
 }
@@ -198,7 +198,8 @@ img {
   top: 0;
   left: 0;
   background-color: transparent;
-  z-index: var(--z-fixed);
+  z-index: 10000;
+  transform: translate3d(0, 0, 9999px);
   transition: background-color .4s, backdrop-filter .4s;
 }
 
@@ -238,7 +239,8 @@ img {
 @media screen and (max-width: 1150px) {
   .nav__menu {
     position: fixed;
-    bottom: 1.5rem;
+    top: 4.25rem;
+    bottom: initial;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(10, 10, 15, 0.85);
@@ -250,6 +252,22 @@ img {
     border: 1px solid var(--border-color);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     z-index: var(--z-fixed);
+    /* Make side-movable/scrollable if links overflow */
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav__menu::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav__list {
+    column-gap: 2rem;
+    justify-content: center;
+  }
+
+  .home__container {
+    padding-top: 9.5rem; /* Push down to avoid covering with nav menu */
   }
 }
 
@@ -1223,14 +1241,15 @@ img {
 /* For medium devices */
 @media screen and (min-width: 576px) {
   .home__container,
-  .about__container,
   .contact__container {
     grid-template-columns: 380px;
     justify-content: center;
   }
 
-  .about__stats {
-    grid-template-columns: repeat(2, 180px);
+  .about__container {
+    grid-template-columns: 1fr;
+    max-width: 450px;
+    margin-inline: auto;
     justify-content: center;
   }
 
@@ -1302,24 +1321,18 @@ img {
   }
 
   .about__container {
-    grid-template-columns: repeat(2, 1fr);
-    align-items: center;
-  }
-
-  .about__image-box {
-    order: 0;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    max-width: 650px;
+    margin-inline: auto;
   }
 
   .about__data {
-    text-align: initial;
-  }
-
-  .about__stats {
-    justify-content: start;
+    text-align: center;
   }
 
   .about__buttons {
-    justify-content: start;
+    justify-content: center;
   }
 
   .projects__container {
@@ -1345,6 +1358,11 @@ img {
 
   .contact__email-box {
     margin-inline: initial;
+  }
+
+  .work__sections {
+    max-width: 850px;
+    margin-inline: auto;
   }
 }
 
@@ -1420,14 +1438,10 @@ img {
   }
 
   .about__container {
-    grid-template-columns: 350px 520px;
-    column-gap: 8rem;
+    grid-template-columns: 1fr;
     justify-content: center;
-  }
-
-  .about__image {
-    width: 350px;
-    height: 350px;
+    max-width: 750px;
+    margin-inline: auto;
   }
 
   .projects__container {
@@ -1458,7 +1472,7 @@ img {
   }
 
   .work__container {
-    grid-template-columns: 280px 600px;
+    grid-template-columns: 280px 850px;
     column-gap: 5rem;
     justify-content: center;
   }
@@ -1753,5 +1767,37 @@ img {
 
   .timeline__item:nth-child(even) .timeline__card:hover {
     transform: translateX(5px);
+  }
+}
+
+/*=============== MOBILE ADDITIONS ===============*/
+@media screen and (max-width: 576px) {
+  /* Make skills horizontally scrollable/side-movable */
+  .skills__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    column-gap: 1.25rem;
+    padding: 1rem .5rem 2rem;
+    scrollbar-width: none; /* Hide scrollbar for clean layout */
+    scroll-padding-inline: 1rem;
+    margin-inline: -1rem; /* push to sides on mobile */
+  }
+  
+  .skills__grid::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Chrome/Safari */
+  }
+  
+  .skills__card {
+    flex: 0 0 270px; /* fixed size cards side-by-side */
+    scroll-snap-align: center;
+  }
+}
+
+/* Hide swiper navigation buttons on mobile to avoid overflow and clean UI */
+@media screen and (max-width: 768px) {
+  .swiper-button-next,
+  .swiper-button-prev {
+    display: none;
   }
 }

@@ -243,6 +243,32 @@ const initPortfolio = () => {
       console.error('Projects Swiper initialization failed:', swiperError);
    }
 
+   /*=============== VISITOR COUNTER ===============*/
+   const updateCounter = async () => {
+      const visitCountEl = document.getElementById('visit-count');
+      if (visitCountEl) {
+         try {
+            const response = await fetch('https://api.counterapi.dev/v1/projects/irfansudarani/counters/visits_v2/up');
+            if (response.ok) {
+               const data = await response.json();
+               visitCountEl.textContent = Number(data.value).toLocaleString();
+            } else {
+               throw new Error('API response not OK');
+            }
+         } catch (error) {
+            console.error('Counter API failed, using fallback:', error);
+            let localVisits = localStorage.getItem('visit_count_fallback_v2');
+            if (!localVisits) {
+               localVisits = 1;
+            } else {
+               localVisits = parseInt(localVisits, 10) + 1;
+            }
+            localStorage.setItem('visit_count_fallback_v2', localVisits);
+            visitCountEl.textContent = Number(localVisits).toLocaleString();
+         }
+      }
+   };
+   updateCounter();
 
    /*=============== SCROLL REVEAL ANIMATION ===============*/
    if (typeof ScrollReveal !== 'undefined') {
@@ -254,7 +280,7 @@ const initPortfolio = () => {
          // reset: true // Animations repeat
       });
 
-      sr.reveal('.about__image-box, .contact__data', { origin: 'left' });
+      sr.reveal('.contact__data', { origin: 'left' });
       sr.reveal('.about__data, .contact__info', { origin: 'right' });
       sr.reveal('.projects__container, .work__container, .skills__container', { delay: 400 });
    }
