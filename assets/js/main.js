@@ -248,22 +248,22 @@ const initPortfolio = () => {
       const visitCountEl = document.getElementById('visit-count');
       if (visitCountEl) {
          try {
-            const response = await fetch('https://api.counterapi.dev/v1/projects/irfansudarani/counters/visits_v2/up');
+            const response = await fetch('https://api.counterapi.dev/v1/irfansudarani/visits_v3/up');
             if (response.ok) {
                const data = await response.json();
-               visitCountEl.textContent = Number(data.value).toLocaleString();
+               visitCountEl.textContent = Number(data.count).toLocaleString();
             } else {
                throw new Error('API response not OK');
             }
          } catch (error) {
             console.error('Counter API failed, using fallback:', error);
-            let localVisits = localStorage.getItem('visit_count_fallback_v2');
+            let localVisits = localStorage.getItem('visit_count_fallback_v3');
             if (!localVisits) {
                localVisits = 1;
             } else {
                localVisits = parseInt(localVisits, 10) + 1;
             }
-            localStorage.setItem('visit_count_fallback_v2', localVisits);
+            localStorage.setItem('visit_count_fallback_v3', localVisits);
             visitCountEl.textContent = Number(localVisits).toLocaleString();
          }
       }
