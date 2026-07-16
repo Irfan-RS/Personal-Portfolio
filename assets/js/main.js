@@ -247,11 +247,19 @@ const initPortfolio = () => {
    const updateCounter = async () => {
       const visitCountEl = document.getElementById('visit-count');
       if (visitCountEl) {
+         const hasVisited = localStorage.getItem('has_visited_v3');
+         const url = hasVisited 
+            ? 'https://api.counterapi.dev/v1/irfansudarani/visits_v3/' 
+            : 'https://api.counterapi.dev/v1/irfansudarani/visits_v3/up';
+         
          try {
-            const response = await fetch('https://api.counterapi.dev/v1/irfansudarani/visits_v3/up');
+            const response = await fetch(url);
             if (response.ok) {
                const data = await response.json();
                visitCountEl.textContent = Number(data.count).toLocaleString();
+               if (!hasVisited) {
+                  localStorage.setItem('has_visited_v3', 'true');
+               }
             } else {
                throw new Error('API response not OK');
             }
@@ -259,12 +267,16 @@ const initPortfolio = () => {
             console.error('Counter API failed, using fallback:', error);
             let localVisits = localStorage.getItem('visit_count_fallback_v3');
             if (!localVisits) {
-               localVisits = 1;
-            } else {
+               localVisits = 300;
+               localStorage.setItem('visit_count_fallback_v3', localVisits);
+            } else if (!hasVisited) {
                localVisits = parseInt(localVisits, 10) + 1;
+               localStorage.setItem('visit_count_fallback_v3', localVisits);
             }
-            localStorage.setItem('visit_count_fallback_v3', localVisits);
             visitCountEl.textContent = Number(localVisits).toLocaleString();
+            if (!hasVisited) {
+               localStorage.setItem('has_visited_v3', 'true');
+            }
          }
       }
    };
