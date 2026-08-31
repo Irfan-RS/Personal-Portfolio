@@ -247,35 +247,41 @@ const initPortfolio = () => {
    const updateCounter = async () => {
       const visitCountEl = document.getElementById('visit-count');
       if (visitCountEl) {
-         const hasVisited = localStorage.getItem('has_visited_v3');
+         const hasVisited = localStorage.getItem('has_visited_portfolio_v4');
+         const BASE_COUNT = 300;
          const url = hasVisited 
-            ? 'https://api.counterapi.dev/v1/irfansudarani/visits_v3/' 
-            : 'https://api.counterapi.dev/v1/irfansudarani/visits_v3/up';
+            ? 'https://abacus.jasoncameron.dev/get/irfansudarani/portfolio' 
+            : 'https://abacus.jasoncameron.dev/hit/irfansudarani/portfolio';
          
          try {
             const response = await fetch(url);
             if (response.ok) {
                const data = await response.json();
-               visitCountEl.textContent = Number(data.count).toLocaleString();
-               if (!hasVisited) {
-                  localStorage.setItem('has_visited_v3', 'true');
+               if (typeof data.value === 'number') {
+                  const totalVisits = BASE_COUNT + data.value;
+                  visitCountEl.textContent = totalVisits.toLocaleString();
+                  localStorage.setItem('visit_count_cached', totalVisits);
+                  if (!hasVisited) {
+                     localStorage.setItem('has_visited_portfolio_v4', 'true');
+                  }
+                  return;
                }
-            } else {
-               throw new Error('API response not OK');
             }
+            throw new Error('API response not OK');
          } catch (error) {
             console.error('Counter API failed, using fallback:', error);
-            let localVisits = localStorage.getItem('visit_count_fallback_v3');
+            let localVisits = localStorage.getItem('visit_count_cached');
             if (!localVisits) {
-               localVisits = 300;
-               localStorage.setItem('visit_count_fallback_v3', localVisits);
+               localVisits = BASE_COUNT + 1;
             } else if (!hasVisited) {
                localVisits = parseInt(localVisits, 10) + 1;
-               localStorage.setItem('visit_count_fallback_v3', localVisits);
+            } else {
+               localVisits = parseInt(localVisits, 10);
             }
+            localStorage.setItem('visit_count_cached', localVisits);
             visitCountEl.textContent = Number(localVisits).toLocaleString();
             if (!hasVisited) {
-               localStorage.setItem('has_visited_v3', 'true');
+               localStorage.setItem('has_visited_portfolio_v4', 'true');
             }
          }
       }
