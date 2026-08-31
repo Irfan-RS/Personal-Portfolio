@@ -670,6 +670,13 @@ img {
   border: 1px solid var(--border-color);
 }
 
+.projects__buttons {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
 .projects__button {
   display: inline-flex;
   align-items: center;
